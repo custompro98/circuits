@@ -3,6 +3,11 @@ package core
 type Bit int
 
 const (
-	BitOn Bit = iota
-	BitOff
+	BitOff Bit = iota
+	BitOn
 )
+
+type Sum struct {
+	S Bit
+	C Bit
+}
