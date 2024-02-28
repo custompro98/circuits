@@ -46,7 +46,7 @@ func TestNand(t *testing.T) {
 
 			result := Nand(v.a, v.b)
 
-			assert.Equal(result, v.expected, v.name)
+			assert.Equal(v.expected, result, v.name)
 		})
 	}
 }

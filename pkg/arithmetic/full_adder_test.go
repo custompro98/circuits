@@ -79,7 +79,7 @@ func TestFullAdder(t *testing.T) {
 
 			result := FullAdder(v.a, v.b, v.c)
 
-			assert.Equal(result, v.expected, v.name)
+			assert.Equal(v.expected, result, v.name)
 		})
 	}
 }

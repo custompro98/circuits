@@ -46,7 +46,7 @@ func TestOr(t *testing.T) {
 
 			result := Or(v.a, v.b)
 
-			assert.Equal(result, v.expected, v.name)
+			assert.Equal(v.expected, result, v.name)
 		})
 	}
 }

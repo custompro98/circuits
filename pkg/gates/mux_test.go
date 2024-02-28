@@ -79,7 +79,7 @@ func TestMux(t *testing.T) {
 
 			result := Mux(v.a, v.b, v.s)
 
-			assert.Equal(result, v.expected, v.name)
+			assert.Equal(v.expected, result, v.name)
 		})
 	}
 }

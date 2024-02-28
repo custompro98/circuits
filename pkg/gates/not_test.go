@@ -31,7 +31,7 @@ func TestNot(t *testing.T) {
 
 			result := Not(v.a)
 
-			assert.Equal(result, v.expected, v.name)
+			assert.Equal(v.expected, result, v.name)
 		})
 	}
 }
