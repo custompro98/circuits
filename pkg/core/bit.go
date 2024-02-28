@@ -11,3 +11,9 @@ type Sum struct {
 	S Bit
 	C Bit
 }
+
+type NBitSum struct {
+	NumBits int
+	S []Bit
+	C Bit
+}
