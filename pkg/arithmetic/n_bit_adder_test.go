@@ -64,6 +64,16 @@ func TestNBitAdder(t *testing.T) {
 				C:       core.BitOn,
 			},
 		},
+		{
+			name: "One plus One (multi-bit) yields Two/NoCarry (numBits equal to max(a, b))",
+			a:    []core.Bit{core.BitOn},
+			b:    []core.Bit{core.BitOff, core.BitOn},
+			expected: core.NBitSum{
+				NumBits: 2,
+				S:       []core.Bit{core.BitOn, core.BitOff},
+				C:       core.BitOff,
+			},
+		},
 	}
 
 	for _, v := range tests {
