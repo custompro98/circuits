@@ -44,7 +44,7 @@ func TestXor(t *testing.T) {
 		t.Run(v.name, func(t *testing.T) {
 			assert := assert.New(t)
 
-			result := Xor(v.a, v.b)
+			result := xor(v.a, v.b)
 
 			assert.Equal(v.expected, result, v.name)
 		})

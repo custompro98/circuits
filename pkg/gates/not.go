@@ -2,6 +2,6 @@ package gates
 
 import "custompro98/circuits/pkg/core"
 
-func Not(a core.Bit) core.Bit {
-	return Nand(a, a)
+func not(a core.Bit) core.Bit {
+	return nand(a, a)
 }

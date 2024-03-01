@@ -49,7 +49,7 @@ func TestDemux(t *testing.T) {
 		t.Run(v.name, func(t *testing.T) {
 			assert := assert.New(t)
 
-			a, b := Demux(v.a, v.s)
+			a, b := demux(v.a, v.s)
 
 			assert.Equal(v.expectedA, a, v.name)
 			assert.Equal(v.expectedB, b, v.name)

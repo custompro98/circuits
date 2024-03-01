@@ -44,7 +44,7 @@ func TestAnd(t *testing.T) {
 		t.Run(v.name, func(t *testing.T) {
 			assert := assert.New(t)
 
-			result := And(v.a, v.b)
+			result := and(v.a, v.b)
 
 			assert.Equal(v.expected, result, v.name)
 		})

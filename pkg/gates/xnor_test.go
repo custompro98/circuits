@@ -44,7 +44,7 @@ func TestXnor(t *testing.T) {
 		t.Run(v.name, func(t *testing.T) {
 			assert := assert.New(t)
 
-			result := Xnor(v.a, v.b)
+			result := xnor(v.a, v.b)
 
 			assert.Equal(v.expected, result, v.name)
 		})

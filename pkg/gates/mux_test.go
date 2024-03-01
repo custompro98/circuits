@@ -77,7 +77,7 @@ func TestMux(t *testing.T) {
 		t.Run(v.name, func(t *testing.T) {
 			assert := assert.New(t)
 
-			result := Mux(v.a, v.b, v.s)
+			result := mux(v.a, v.b, v.s)
 
 			assert.Equal(v.expected, result, v.name)
 		})

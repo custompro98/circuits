@@ -44,7 +44,7 @@ func TestNand(t *testing.T) {
 		t.Run(v.name, func(t *testing.T) {
 			assert := assert.New(t)
 
-			result := Nand(v.a, v.b)
+			result := nand(v.a, v.b)
 
 			assert.Equal(v.expected, result, v.name)
 		})

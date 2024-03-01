@@ -29,7 +29,7 @@ func TestNot(t *testing.T) {
 		t.Run(v.name, func(t *testing.T) {
 			assert := assert.New(t)
 
-			result := Not(v.a)
+			result := not(v.a)
 
 			assert.Equal(v.expected, result, v.name)
 		})
