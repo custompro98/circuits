@@ -62,9 +62,7 @@ type Gate interface {
 type gate struct {
 	gateType GateType
 
-	inputA Gate
-	inputB Gate
-
+	input  []Gate
 	output GateOutput
 }
 
@@ -72,8 +70,7 @@ func New(t GateType) Gate {
 	g := &gate{
 		gateType: t,
 
-		inputA: nil,
-		inputB: nil,
+		input: make([]Gate, 0),
 
 		output: GateOutput(core.BitInvalid),
 	}
@@ -86,11 +83,7 @@ func New(t GateType) Gate {
 }
 
 func (g *gate) WithInput(in Gate) Gate {
-	if g.inputA == nil {
-		g.inputA = in
-	} else if g.inputB == nil {
-		g.inputB = in
-	}
+	g.input = append(g.input, in)
 
 	return g
 }
@@ -100,10 +93,13 @@ func (g *gate) Input() []GateInput {
 		return []GateInput{}
 	}
 
-	return []GateInput{
-		GateInput(g.inputA.Output()),
-		GateInput(g.inputB.Output()),
+	input := make([]GateInput, 0)
+
+	for _, v := range g.input {
+		input = append(input, GateInput(v.Output()))
 	}
+
+	return input
 }
 
 func (g *gate) Output() GateOutput {
@@ -111,28 +107,28 @@ func (g *gate) Output() GateOutput {
 	case Input:
 		break
 	case Nand:
-		g.output = GateOutput(nand(core.Bit(g.inputA.Output()), core.Bit(g.inputB.Output())))
+		g.output = GateOutput(nand(core.Bit(g.input[0].Output()), core.Bit(g.input[1].Output())))
 		break
 	case And:
-		g.output = GateOutput(and(core.Bit(g.inputA.Output()), core.Bit(g.inputB.Output())))
+		g.output = GateOutput(and(core.Bit(g.input[0].Output()), core.Bit(g.input[1].Output())))
 		break
 	case Not:
-		g.output = GateOutput(not(core.Bit(g.inputA.Output())))
+		g.output = GateOutput(not(core.Bit(g.input[0].Output())))
 		break
 	case Or:
-		g.output = GateOutput(or(core.Bit(g.inputA.Output()), core.Bit(g.inputB.Output())))
+		g.output = GateOutput(or(core.Bit(g.input[0].Output()), core.Bit(g.input[1].Output())))
 		break
 	case Nor:
-		g.output = GateOutput(nor(core.Bit(g.inputA.Output()), core.Bit(g.inputB.Output())))
+		g.output = GateOutput(nor(core.Bit(g.input[0].Output()), core.Bit(g.input[1].Output())))
 		break
 	case Xor:
-		g.output = GateOutput(xor(core.Bit(g.inputA.Output()), core.Bit(g.inputB.Output())))
+		g.output = GateOutput(xor(core.Bit(g.input[0].Output()), core.Bit(g.input[1].Output())))
 		break
 	case Xnor:
-		g.output = GateOutput(xnor(core.Bit(g.inputA.Output()), core.Bit(g.inputB.Output())))
+		g.output = GateOutput(xnor(core.Bit(g.input[0].Output()), core.Bit(g.input[1].Output())))
 		break
 	case Output:
-		g.output = GateOutput(g.inputA.Output())
+		g.output = GateOutput(g.input[0].Output())
 		break
 	}
 
