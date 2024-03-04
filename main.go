@@ -58,11 +58,19 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c", "q":
 			return m, tea.Quit
-		case "tab":
+		case tea.KeyTab.String():
 			if m.selected+1 < len(m.gates) {
 				m.selected = m.selected + 1
 			} else {
 				m.selected = 0
+			}
+
+			break
+		case tea.KeyShiftTab.String():
+			if m.selected-1 >= 0 {
+				m.selected = m.selected - 1
+			} else {
+				m.selected = len(m.gates) - 1
 			}
 
 			break
