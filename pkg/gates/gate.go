@@ -3,10 +3,11 @@ package gates
 import (
 	"custompro98/circuits/pkg/core"
 	"fmt"
+	"strings"
 )
 
 type GateOutput core.Bit
-type GateInput GateOutput
+type GateInput core.Bit
 type GateType int
 
 const (
@@ -46,44 +47,122 @@ func (gt GateType) String() string {
 	return fmt.Sprintf("Could not translate gate %v", int(gt))
 }
 
-type Gate struct {
-	Type GateType
+type Gate interface {
+	WithInput(Gate) Gate
 
-	InputA *GateOutput
-	InputB *GateOutput
+	Input() []GateInput
+	Output() GateOutput
+	Type() string
+	String() string
+
+	// Only valid if Type == "Input"
+	Toggle() Gate
 }
 
-func (g *Gate) Output() []GateOutput {
-	o := []GateOutput{}
-	switch g.Type {
+type gate struct {
+	gateType GateType
+
+	inputA Gate
+	inputB Gate
+
+	output GateOutput
+}
+
+func New(t GateType) Gate {
+	g := &gate{
+		gateType: t,
+
+		inputA: nil,
+		inputB: nil,
+
+		output: GateOutput(core.BitInvalid),
+	}
+
+	if t == Input {
+		g.output = GateOutput(core.BitOff)
+	}
+
+	return g
+}
+
+func (g *gate) WithInput(in Gate) Gate {
+	if g.inputA == nil {
+		g.inputA = in
+	} else if g.inputB == nil {
+		g.inputB = in
+	}
+
+	return g
+}
+
+func (g *gate) Input() []GateInput {
+	if g.gateType == Input || g.gateType == Output {
+		return []GateInput{}
+	}
+
+	return []GateInput{
+		GateInput(g.inputA.Output()),
+		GateInput(g.inputB.Output()),
+	}
+}
+
+func (g *gate) Output() GateOutput {
+	switch g.gateType {
 	case Input:
-		o = append(o, GateOutput(core.BitOn))
 		break
 	case Nand:
-		o = append(o, GateOutput(nand(core.Bit(*g.InputA), core.Bit(*g.InputB))))
+		g.output = GateOutput(nand(core.Bit(g.inputA.Output()), core.Bit(g.inputB.Output())))
 		break
 	case And:
-		o = append(o, GateOutput(and(core.Bit(*g.InputA), core.Bit(*g.InputB))))
+		g.output = GateOutput(and(core.Bit(g.inputA.Output()), core.Bit(g.inputB.Output())))
 		break
 	case Not:
-		o = append(o, GateOutput(not(core.Bit(*g.InputA))))
+		g.output = GateOutput(not(core.Bit(g.inputA.Output())))
 		break
 	case Or:
-		o = append(o, GateOutput(or(core.Bit(*g.InputA), core.Bit(*g.InputB))))
+		g.output = GateOutput(or(core.Bit(g.inputA.Output()), core.Bit(g.inputB.Output())))
 		break
 	case Nor:
-		o = append(o, GateOutput(nor(core.Bit(*g.InputA), core.Bit(*g.InputB))))
+		g.output = GateOutput(nor(core.Bit(g.inputA.Output()), core.Bit(g.inputB.Output())))
 		break
 	case Xor:
-		o = append(o, GateOutput(xor(core.Bit(*g.InputA), core.Bit(*g.InputB))))
+		g.output = GateOutput(xor(core.Bit(g.inputA.Output()), core.Bit(g.inputB.Output())))
 		break
 	case Xnor:
-		o = append(o, GateOutput(xnor(core.Bit(*g.InputA), core.Bit(*g.InputB))))
+		g.output = GateOutput(xnor(core.Bit(g.inputA.Output()), core.Bit(g.inputB.Output())))
 		break
 	case Output:
-		o = append(o, GateOutput(*g.InputA))
+		g.output = GateOutput(g.inputA.Output())
 		break
 	}
 
-	return o
+	return g.output
+}
+
+func (g *gate) Type() string {
+	return g.gateType.String()
+}
+
+func (g *gate) Toggle() Gate {
+	if g.gateType != Input {
+		return g
+	}
+
+	g.output = GateOutput(not(core.Bit(g.output)))
+
+	return g
+}
+
+func (g *gate) String() string {
+	s := []string{fmt.Sprintf("%s\n", g.Type())}
+
+	if g.gateType != Input && g.gateType != Output {
+		s = append(s, fmt.Sprintf("Input: %v", g.Input()))
+	} else {
+		s = append(s, "")
+	}
+
+	s = append(s, fmt.Sprintf("Output: %v", g.Output()))
+
+	return strings.Join(s, "\n")
 }

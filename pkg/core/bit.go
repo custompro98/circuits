@@ -3,8 +3,9 @@ package core
 type Bit int
 
 const (
-	BitOff Bit = iota
+	BitOff     Bit = iota
 	BitOn
+	BitInvalid Bit = -1
 )
 
 type Sum struct {
@@ -14,6 +15,6 @@ type Sum struct {
 
 type NBitSum struct {
 	NumBits int
-	S []Bit
-	C Bit
+	S       []Bit
+	C       Bit
 }
