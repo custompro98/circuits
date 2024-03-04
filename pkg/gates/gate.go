@@ -49,6 +49,7 @@ func (gt GateType) String() string {
 
 type Gate interface {
 	WithInput(Gate) Gate
+	ClearInput() Gate
 
 	Input() []GateInput
 	Output() GateOutput
@@ -84,6 +85,12 @@ func New(t GateType) Gate {
 
 func (g *gate) WithInput(in Gate) Gate {
 	g.input = append(g.input, in)
+
+	return g
+}
+
+func (g *gate) ClearInput() Gate {
+	g.input = make([]Gate, 0)
 
 	return g
 }
